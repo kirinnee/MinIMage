@@ -4,4 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mime-Detective" Version="0.0.5" />
+    <PackageReference Include="nQuant.Core.NETStandard" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>

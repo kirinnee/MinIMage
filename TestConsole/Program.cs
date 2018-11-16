@@ -71,51 +71,33 @@ namespace TestConsole
             AsyncMain(null).GetAwaiter().GetResult();
         }
 
+        static async Task AsyncMain(string[] args)
+        {
 
-        //static async Task AsyncMain(string[] args)
-        //{
-        //    // byte[] i = await ReadStdin();
-        //    string data = await File.ReadAllTextAsync("../../../data.txt");
+            PngQuant pngQuant = new PngQuant();
+            Stopwatch sw = new Stopwatch();
+            byte[] files = File.ReadAllBytes("assets/amazed.png");
+            Parallel.For(0,1, i => {
+                for (int i2 = 0; i2 < 1; i2++)
+                {
+                    byte[] transformed = pngQuant.CompressTest(files, i*16+1, i2*16+1);
+                    File.WriteAllBytesAsync($"test/{i}-{i2}.png", transformed);
+                }
+            });
 
-        //    IEnumerable<Task<FilePairStage2>> dict = 
-        //        data.Replace("\r\n", "\n")
-        //        .Replace("\r","\n")
-        //        .Split('\n')
-        //        .Where( s=> s.Trim()!= "")
-        //        .Select(s => s.Split(' '))
-        //        .Select(s => new FilePairStage1(){ From = s[0], To = s[1] })
-        //        .Select(s=> s.Read());
+            Console.WriteLine("Elapsed={0}", sw.Elapsed);
+            Console.WriteLine("DONE!");
+            Console.ReadLine();
+            await AsyncMain(args);
+        }
 
-        //    FilePairStage2[] stage2s = await Task.WhenAll(dict);
-        //    List<FilePairStage3> stage3s = new List<FilePairStage3>();
-        //    PngQuant compressor = new PngQuant();
-        //    for (int i = 0; i < stage2s.Length; i++)
-        //    {
-        //        var file = stage2s[i];
-        //        FilePairStage3 s3 = await file.Transform(compressor);
-        //        stage3s.Add(s3);
-        //    }
-
-        //    IEnumerable<Task> tasks = stage3s.Select(s => s.Write());
-        //    await Task.WhenAll(tasks);
-        //    Console.WriteLine("DONE!");
-
-        //    Console.ReadLine();
-        //    await AsyncMain(args);
-
-        //    //await WriteStdout(compressed);
-        //}
-
-        static async Task AsyncMain(string[] args) 
+        static async Task AsyncMain2(string[] args) 
         {
             string from = "assets";
             string to = "compressed";
 
             PngQuant pngQuant = new PngQuant();
-
             Stopwatch sw = new Stopwatch();
-
-           
 
             IEnumerable<Task<FilePairStage2>> files = Directory.GetFiles(Path.Combine(from))
                 .AsParallel()
