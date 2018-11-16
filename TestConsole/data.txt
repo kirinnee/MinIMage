@@ -1,0 +1,4 @@
+﻿../../../sop.png ../../../sop-com.png
+../../../sop.png ../../../sop-com2.png
+../../../sop2.png ../../../sop-com3.png
+../../../sop2.png ../../../sop-com4.png
