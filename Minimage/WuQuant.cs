@@ -12,7 +12,7 @@ namespace Minimage
 {
     public class WuQuant : Compressor
     {
-        public WuQuant():base ( new string[] {"image/png", "image/jpg" })
+        public WuQuant():base ( new string[] {"image/png" })
         {
 
         }

@@ -2,13 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Kirinnee.Minimage</PackageId>
+    <Authors>Kirinnee</Authors>
+    <Company>BigBulb Studio</Company>
+    <Description>Binary Wrapper for PngQuant, JpegOptim and Wu's nQuant algorithmn to compress image.
+Binary still have to be installed on target machine and accessible via ${PATH}</Description>
+    <Copyright />
+    <PackageProjectUrl>https://github.com/kirinnee/MinIMage.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kirinnee/MinIMage.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>png jpeg compression pngquant quantization jpegoptim</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MedallionShell" Version="1.5.1" />
     <PackageReference Include="Mime-Detective" Version="0.0.5" />
     <PackageReference Include="nQuant.Core.NETStandard" Version="1.0.0" />
   </ItemGroup>

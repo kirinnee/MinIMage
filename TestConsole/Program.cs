@@ -1,6 +1,5 @@
 ﻿using Minimage;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -37,9 +36,9 @@ namespace TestConsole
     {
         internal byte[] From;
         internal string To;
-        
 
-        internal async Task<FilePairStage3> Transform(PngQuant com)
+
+        internal async Task<FilePairStage3> Transform(Compressor com)
         {
             byte[] bytes = await com.Compress(From);
             return new FilePairStage3()
@@ -63,46 +62,29 @@ namespace TestConsole
         }
     }
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine(args);
             AsyncMain(null).GetAwaiter().GetResult();
         }
 
-        static async Task AsyncMain(string[] args)
-        {
-
-            PngQuant pngQuant = new PngQuant();
-            Stopwatch sw = new Stopwatch();
-            byte[] files = File.ReadAllBytes("assets/amazed.png");
-            Parallel.For(0,1, i => {
-                for (int i2 = 0; i2 < 1; i2++)
-                {
-                    byte[] transformed = pngQuant.CompressTest(files, i*16+1, i2*16+1);
-                    File.WriteAllBytesAsync($"test/{i}-{i2}.png", transformed);
-                }
-            });
-
-            Console.WriteLine("Elapsed={0}", sw.Elapsed);
-            Console.WriteLine("DONE!");
-            Console.ReadLine();
-            await AsyncMain(args);
-        }
-
-        static async Task AsyncMain2(string[] args) 
+        private static async Task AsyncMain(string[] args)
         {
             string from = "assets";
             string to = "compressed";
 
-            PngQuant pngQuant = new PngQuant();
+            Compressor pngQuant = new PngQuant( new PngQuantOptions()
+            {
+                QualityMinMax = (5,10)
+            });
             Stopwatch sw = new Stopwatch();
 
             IEnumerable<Task<FilePairStage2>> files = Directory.GetFiles(Path.Combine(from))
                 .AsParallel()
-                .Select( s=> new FilePairStage1(s, Path.Combine(to,Path.GetRelativePath(from,s))))
-                .Select( s => s.Read());
+                .Select(s => new FilePairStage1(s, Path.Combine(to, Path.GetRelativePath(from, s))))
+                .Select(s => s.Read());
             FilePairStage2[] stage2s = await Task.WhenAll(files);
             sw.Start();
             IEnumerable<Task<FilePairStage3>> bytes = stage2s.AsParallel().Select(s => s.Transform(pngQuant));
@@ -119,11 +101,11 @@ namespace TestConsole
             Console.ReadLine();
 
             await AsyncMain(args);
-        }    
+        }
 
-        static async Task<byte[]> ReadStdin()
+        private static async Task<byte[]> ReadStdin()
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 Stream input = Console.OpenStandardInput();
                 await input.CopyToAsync(stream);
@@ -132,7 +114,7 @@ namespace TestConsole
             }
         }
 
-        static async Task WriteStdout(byte[] output)
+        private static async Task WriteStdout(byte[] output)
         {
             using (var stream = new MemoryStream(output))
             {
